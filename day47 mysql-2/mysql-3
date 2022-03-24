@@ -1,0 +1,50 @@
+mysql索引 便利太慢 索引很快
+
+创建与维护索引会消耗时间与磁盘空间,但查询速度大大提高
+
+CREATE TABLE TEST1(
+
+    id INT auto_increment,
+    name varchar(20),
+    saraly INT DEFAULT '1000'
+);
+
+INSERT INTO TEST1 (name) values("AAA"),("BBB"),("CCC"),("DDD");
+
+unique 普通索引
+
+CREATE TABLE TEST2(
+id INT,
+NAME VARCHAR(20),
+INDEX index_name (NAME)
+);
+
+CREATE TABLE TEST2(
+id INT,
+NAME VARCHAR(20),
+key index_name (NAME)
+);
+
+创建全文
+FULLTEXT INDX index_resume (resume)
+
+INDEX index_name_resume (name,resume)
+
+#修改分割符
+delimiter $$
+
+create procedure autoinsert()
+BEGIN
+declare i int default 1;
+while(i<50000)do
+insert into t1 values(i,"yuan");
+set i=i+1;
+end while;
+END $$
+
+delimiter ;
+===================
+CALL autoinsert();
+
+create index index_name on t1(id);
+

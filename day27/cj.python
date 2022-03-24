@@ -1,0 +1,7 @@
+def multi():
+    return [lambda x : i*x for i in range(4)]
+
+print(multi())
+#print([m(2) for m in multi()])
+for m in multi():
+    print(m)

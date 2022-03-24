@@ -1,0 +1,106 @@
+外键
+
+CREATE TABLE ClassCharger(
+
+    id TINYINT PRIMARY KEY auto_increment,
+    name VARCHAR(20),
+    age INT,
+    is_marriged boolean
+);
+
+INSERT INTO ClassCharger (name,age,is_marriged) values ("火影",52,0),
+                                                       ("鸣人",34,0),
+                                                       ("小樱",32,0),
+                                                       ("雏田",28,0),
+                                                       ("佐助",61,0);
+
+CREATE TABLE Student(
+
+    id INT PRIMARY KEY auto_increment,
+    name VARCHAR(20),
+    charger_id TINYINT,
+    FOREIGN KEY (charger_id) REFERENCES ClassCharger (id)
+)ENGINE=INNODB;
+
+INSERT INTO Student(name,charger_id) values("博人",2),
+("带土",4),
+("宇智波",1),
+("大蛇丸",3),
+("小李",1),
+("鹿丸",3),
+("佐良娜",2);
+
+delete from classcharger where name="鸣人";
+UPDATE  Student SET charger_id=4 WHERE id=1 OR id=7;
+
+增加外键 删除外键
+
+SHOW CREATE TABLE Student;
+ALTER TABLE student ADD CONSTRAINT abc FOREIGN KEY (charger_id) REFERENCES ClassCharger (id);
+ALTER TABLE Student DROP FOREIGN KEY abc;
+
+INNODB 支持的ON语句
+
+级联删除
+FOREIGN KEY (charger_id) REFERENCES ClassCharger (id) ON DELETE CASCADE;
+FOREIGN KEY (charger_id) REFERENCES ClassCharger (id) ON DELETE SET NULL;#当删除记录时 设置子表内容为NULL
+
+多表查询之连接查询
+    内连接查询：inner join
+    外连接查询：left join,right join
+    全连接查询：full join
+
+CREATE TABLE tableA (id INT PRIMARY KEY,NAME VARCHAR(20));
+CREATE TABLE tableB (id INT PRIMARY KEY,NAME VARCHAR(20),tableA_id INT);
+INSERT INTO tableA VALUES (1,'alvin');
+INSERT INTO tableA VALUES (2,'xialv');
+INSERT INTO tableA VALUES (3,'yuan');
+
+INSERT INTO tableB VALUES (1,'博人',1);
+INSERT INTO tableB VALUES (2,'鸣人',2);
+INSERT INTO tableB VALUES (3,'佐助',4);
+
+笛卡尔积 表 select * from  tableA,tableB;
+SELECT * FROM tableA,tableB WHERE tableA.id=tableB.tableA_id; #内连接查询
+SELECT tableA.NAME,tableB.NAME FROM tableA,tableB WHERE tableA.id=tableB.tableA_id;
+SELECT * FROM tableB INNER JOIN tableA ON tableB.tableA_id = tableA.id;
+
+
+CREATE TABLE employee(
+emp_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+emp_name VARCHAR(20),
+age INT,
+dept_id INT);
+
+INSERT INTO employee(emp_name,age,dept_id) VALUES
+('A',19,200),('B',26,201),('C',30,201),('D',24,202),('E',20,200),('F',38,204);
+
+CREATE TABLE deparment(
+dept_id INT,
+dept_name VARCHAR(20)
+);
+
+INSERT INTO deparment VALUES
+(200,'人事部'),
+(201,'技术部'),
+(202,'销售部'),
+(203,'财政部');
+
+SELECT emp_name,dept_name FROM employee INNER JOIN deparment WHERE emp_name='A' and employee.dept_id=deparment.dept_id;
+
+SELECT emp_name,dept_name FROM employee left JOIN deparment on employee.dept_id=deparment.dept_id;#以左边表为主
+SELECT emp_name,dept_name FROM deparment left JOIN employee on employee.dept_id=deparment.dept_id;#以右边表为主
+right join 相反 left join
+
+全连接查询：full join
+SELECT emp_name,dept_name FROM employee full JOIN deparment on employee.dept_id=deparment.dept_id; #mysql 不支持这种写法
+
+union
+union all
+
+多表查询之子查询 EXISTS 条件判断后面成立前面执行 否则不执行
+SELECT * FROM employee WHERE exists (SELECT dept_id FROM deparment) ORDER BY age ASC;
+
+SELECT * FROM employee WHERE dept_id in (SELECT dept_id FROM deparment);
+SELECT * FROM employee WHERE dept_id in (SELECT dept_id FROM deparment) ORDER BY age ASC;
+CREATE TABLE department(SELECT * FROM emp);

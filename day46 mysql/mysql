@@ -1,0 +1,166 @@
+mysql
+
+select database();check database
+
+float(4,2) 99.99
+
+char(3)三个字节的内容 必须是3个字节
+
+varchar(20)0-20个字节
+
+DATE
+
+TIME
+
+YEAR
+
+DATETIME
+
+TIMESTAMP
+#主键 不能为空 唯一的
+
+
+CREATE TABLE employee(
+    id TINYINT PRIMARY KEY auto_increment,
+    name varchar(25),
+    gender boolean,
+    age int,
+    department varchar(20),
+    salary DOUBLE(7,2)
+);
+mysql> desc employee;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | tinyint     | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(25) | YES  |     | NULL    |                |
+| gender     | tinyint(1)  | YES  |     | NULL    |                |
+| age        | int         | YES  |     | NULL    |                |
+| department | varchar(20) | YES  |     | NULL    |                |
+| salary     | double(7,2) | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+
+mysql> show create table employee;
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table    | Create Table                                                                                                                                                                                                                                                                                                                             |
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| employee | CREATE TABLE `employee` (
+  `id` tinyint NOT NULL AUTO_INCREMENT,
+  `name` varchar(25) DEFAULT NULL,
+  `gender` tinyint(1) DEFAULT NULL,
+  `age` int DEFAULT NULL,
+  `department` varchar(20) DEFAULT NULL,
+  `salary` double(7,2) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql>
+
+对字段修改
+
+mysql> albert table employee add is_married;
+
+mysql> alter table employee add entry_date date not null;
+
+mysql> alter table employee add entry_date date not null;
+
+mysql> alter table employee modify age smallint unique;
+
+mysql> alter table employee modify entry_date varchar(20) not null after id;
+mysql> desc employee;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | tinyint     | NO   | PRI | NULL    | auto_increment |
+| entry_date | varchar(20) | NO   |     | NULL    |                |
+| name       | varchar(25) | YES  |     | NULL    |                |
+| gender     | tinyint(1)  | YES  |     | NULL    |                |
+| age        | smallint    | YES  | UNI | NULL    |                |
+| department | varchar(20) | YES  |     | NULL    |                |
+| salary     | double(7,2) | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+7 rows in set (0.00 sec)
+
+mysql>
+
+mysql> rename table employee to emp;
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456'; #mysql 8.0 设置密码
+
+在 MySQL 8.0 版本中正确授权语句
+mysql> CREATE USER 'cj'@'%' IDENTIFIED BY '123456';
+mysql> GRANT ALL ON *.* TO 'cj'@'%' WITH GRANT OPTION;
+
+配置文件
+root@m4:/etc/mysql/mysql.conf.d# ls
+mysql.cnf  mysqld.cnf
+
+对记录修改
+mysql> insert into emp (id,age,name,gender,salary,department,entry_date) values (1,20,"alex",0,1700,"技术部门","2021/3/31");
+
+对记录查询
+
+CREATE TABLE ExamResult(
+    id INT PRIMARY KEY auto_increment,
+    name VARCHAR(20),
+    JS DOUBLE,
+    Django DOUBLE,
+    Flask DOUBLE
+);
+
+INSERT INTO ExamResult VALUES (1,"yuan",98,98,98),
+                              (2,"xialv",35,98,67),
+                              (3,"alex",59,59,62),
+                              (4,"wusir",88,89,82),
+                              (5,"alvin",88,98,67),
+                              (6,"yuan",86,100,55);
+
+SELECT DISTINCT NAME from ExamResult;
+
+SELECT NAME,js+10,Django+10,Flask+10 FROM ExamResult;
+
+SELECT NAME AS 姓名,js+10 AS js,django+10 AS django,flask+10 FROM ExamResult;
+
+SELECT NAME,js FROM ExamResult WHERE js >80;
+
+where:
+     > < >= <=
+     <> !=
+     in(80,90,100)
+     like 'li%'
+
+SELECT NAME,js FROM ExamResult WHERE js BETWEEN 50 AND 89;
+SELECT NAME,js FROM ExamResult WHERE name LIKE 'a%';
+SELECT NAME FROM ExamResult WHERE js IS NULL;
+
+     oder by
+SELECT NAME,js FROM ExamResult ORDER BY js;
+SELECT NAME,js FROM ExamResult where js > 70 ORDER BY js; #降序
+SELECT NAME,js FROM ExamResult ORDER BY js DESC;    #升序
+SELECT NAME,js+django+flask AS 总成绩 FROM ExamResult ORDER BY 总成绩;
+SELECT js AS js成绩 FROM ExamResult WHERE js成绩 > 70; #错误的 js > 70
+
+    执行顺序 from -> where -> select ->group by -> having -> order by
+
+    group by 分组查询 按分组条件分组后每一组只查询 只显示第一条记录
+
+SELECT * FROM ExamResult GROUP BY 2;
+SELECT * FROM ExamResult ;         #根据GROUP BY的条件，如果有相同的内容只显示第一条内容
+SELECT * FROM ExamResult GROUP BY 3;
+
+    聚合函数 avg,sum,Max,Min,count次数
+SELECT name,SUM(js) FROM ExamResult GROUP BY name;
+SELECT NAME,sum(django) FROM ExamResult group BY NAME HAVING SUM(django)>150; #select 在group by,前 having 在group by 之后
+SELECT COUNT(Name) FROM ExamResult WHERE js > 70;
+SELECT  SUM(js)+SUM(django)+SUM(flask)/count(NAME) FROM ExamResult;
+SELECT name,max(js+django+flask) FROM ExamResult;
+
+    ifnull（js,0)函数 把null 换成0
+
+    limit 限制输出内容的多少 limit 3 输出三条limit 1,4 跳过几条显示几条
+
+
+

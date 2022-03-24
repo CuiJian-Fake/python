@@ -1,0 +1,46 @@
+model(数据库) --------ORM------只能python使用
+
+数据库概念 表与表之间的关系
+1 1对多
+
+2 多对多
+3 1对1 (unique)
+python的类
+
+ORM-------- object relation mapping 对象关系映射表
+实例化 1个实例就是一条记录
+class emp():
+
+Django 默认支持sqlite 数据库
+
+python manage.py makemigrations
+python manage.py migrate
+
+单表操作
+表记录的添加
+方式1
+def addbook(request):
+    b=book(name='python基础',price=99,author='yuan',pub_date='2017-12-12')
+    b.save()
+    return HttpResponse('添加成功')
+
+方式2
+    book.objects.create(name='shell基础',price=199,author='alex',pub_date='2017-12-12')
+    book.objects.create(**dic)字典
+
+记录更新
+方式1
+    book.objects.filter(author='yuan').update(price=999)
+
+方式2
+    b=book.objects.get(author='alex')
+    # print(b,type(b))
+    b.price=888
+    b.save()
+
+表记录查询
+
+
+
+
+
